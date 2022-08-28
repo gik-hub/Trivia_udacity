@@ -1,8 +1,10 @@
+from crypt import methods
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 import random
+from models import Category
 
 from models import setup_db, Question, Category
 
@@ -21,7 +23,7 @@ def create_app(test_config=None):
     
     
     """
-    @TODO: Use the after_request decorator to set Access-Control-Allow
+    @DONE: Use the after_request decorator to set Access-Control-Allow
     """
     # CORS Headers 
     @app.after_request
@@ -42,8 +44,30 @@ def create_app(test_config=None):
     Create an endpoint to handle GET requests
     for all available categories.
     """
+    @app.route('/categories', methods=['GET'])
+    def get_categories():
+        page = request.args.get('page', 1, type=int)
+        start = (page -1) * 10
+        end = start + 10
+        categories = Category.query.all()
+        formatted_categories = [category.format() for category in categories]
+        return jsonify({'success': True,
+                        'data': formatted_categories[start:end],
+                        'all_categories': len(formatted_categories)
+                        })
 
+    @app.route('/categories/<int:catgory_id>', methods=['GET', 'PATCH'])
+    def category(catgory_id):
+        category = Category.query.filter(Category.id == catgory_id).one_or_none()
+        
+        if category is None:
+            abort(404)
+        else:
+            return jsonify({'success': True,
+                        'data': category.format(),
+                        })
 
+        
     """
     @TODO:
     Create an endpoint to handle GET requests for questions,
@@ -57,7 +81,7 @@ def create_app(test_config=None):
     Clicking on the page numbers should update the questions.
     """
 
-    """
+    """ 
     @TODO:
     Create an endpoint to DELETE question using a question ID.
 
@@ -114,5 +138,13 @@ def create_app(test_config=None):
     including 404 and 422.
     """
 
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            "success": False, 
+            "error": 404,
+            "message": "Not found"
+            }), 404
+        
     return app
 
