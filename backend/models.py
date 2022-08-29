@@ -37,6 +37,8 @@ class Question(db.Model):
     answer = Column(String)
     category = Column(String)
     difficulty = Column(Integer)
+    # category_id = db.Column(db.Integer, db.ForeignKey('category.id'),
+    #     nullable=False)
 
     def __init__(self, question, answer, category, difficulty):
         self.question = question
@@ -73,6 +75,7 @@ class Category(db.Model):
 
     id = Column(Integer, primary_key=True)
     type = Column(String)
+    # questions = db.relationship('Question', backref='person', lazy=True)
 
     def __init__(self, type):
         self.type = type
