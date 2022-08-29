@@ -25,6 +25,7 @@ class QuestionView extends Component {
       url: `/questions?page=${this.state.page}`, //TODO: update request URL
       type: 'GET',
       success: (result) => {
+        console.log('result>>>>>>>>>>', result)
         this.setState({
           questions: result.questions,
           totalQuestions: result.total_questions,
@@ -34,7 +35,8 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load questions. Please try your request again');
+        alert('Unable to load questions. Please try your request again 1');
+        console.log('error', error)
         return;
       },
     });
@@ -76,7 +78,7 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load questions. Please try your request again');
+        alert('Unable to load questions. Please try your request again 2');
         return;
       },
     });
@@ -102,7 +104,7 @@ class QuestionView extends Component {
         return;
       },
       error: (error) => {
-        alert('Unable to load questions. Please try your request again');
+        alert('Unable to load questions. Please try your request again 3');
         return;
       },
     });
@@ -118,7 +120,7 @@ class QuestionView extends Component {
             this.getQuestions();
           },
           error: (error) => {
-            alert('Unable to load questions. Please try your request again');
+            alert('Unable to load questions. Please try your request again 4');
             return;
           },
         });
